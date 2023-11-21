@@ -24,7 +24,7 @@
     ps = conexion.prepareStatement(sql);
     ps.setInt(1, socioID);
 
-    ResultSet resultSocio = ps.executeQuery(sql);
+    ResultSet resultSocio = ps.executeQuery();
     //ps.executeUpdate();
 
     while (resultSocio.next()) {
