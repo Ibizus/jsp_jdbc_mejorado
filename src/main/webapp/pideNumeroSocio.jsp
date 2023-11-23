@@ -21,8 +21,8 @@
       <tr><th>Código</th><th>Nombre</th><th>Estatura</th><th>Edad</th><th>Localidad</th></tr>
     <%
       while (listado.next()) {
-          out.println("<tr><td>");
-          out.println(listado.getString("socioID") + "</td>");
+          out.println("<tr><td><a href=\"detalleSocio.jsp?socioID=" + listado.getString("socioID") + "\">");
+          out.println(listado.getString("socioID") + "</a></td>");
           out.println("<td>" + listado.getString("nombre") + "</td>");
           out.println("<td>" + listado.getString("estatura") + "</td>");
           out.println("<td>" + listado.getString("edad") + "</td>");
