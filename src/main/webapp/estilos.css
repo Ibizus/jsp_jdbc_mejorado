@@ -56,3 +56,9 @@ tbody td{
     color:#666;
     text-shadow:1px 1px 1px #fff;
 }
+
+.destacar > td{
+    background-color: #95aa8b;
+    color: black;
+    font-weight: bold;
+}

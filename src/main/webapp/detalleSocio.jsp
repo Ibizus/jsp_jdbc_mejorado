@@ -98,6 +98,8 @@
 <%
     }
 %>
+    <br>
+    <a href="index.jsp">Página de inicio</a>
 
 </body>
 </html>
