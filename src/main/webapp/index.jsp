@@ -14,5 +14,8 @@
         <a href="formularioSocio.jsp">Fomulario de Socio Nuevo</a>
         <br>
         <a href="pideNumeroSocio.jsp">Listado de Socios</a>
+        <br>
+        <br>
+        <a href="menuEntrenamiento.jsp">Entrenamientos</a>
     </body>
 </html>
