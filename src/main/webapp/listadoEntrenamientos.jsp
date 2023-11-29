@@ -15,37 +15,34 @@
     Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:30306/baloncesto","root", "user");
     Statement s = conexion.createStatement();
 
-    ResultSet listado = s.executeQuery ("SELECT * FROM socio");
+    ResultSet listado = s.executeQuery ("SELECT * FROM entrenamiento");
 %>
 <table>
     <tr><th>ID Entrenamiento</th><th>Tipo</th><th>Ubicación</th><th>Fecha</th></tr>
     <%
-        Integer socioIDADestacar = (Integer)session.getAttribute("socioADestacar");
+        Integer entrenamientoID = (Integer)session.getAttribute("entrenamientoADestacar");
         String claseDestacar = "";
         while (listado.next()) {
 
-            claseDestacar = (socioIDADestacar != null && socioIDADestacar == listado.getInt("socioID")) ? "destacar" : "";
+            claseDestacar = (entrenamientoID != null && entrenamientoID == listado.getInt("entrenamientoID")) ? "destacar" : "";
 
     %>
     <tr class="<%= claseDestacar%>">
         <td>
-            <%= listado.getString("socioID")%>
+            <%= listado.getString("entrenamientoID")%>
         </td>
         <td>
-            <%= listado.getString("nombre")%>
+            <%= listado.getString("tipo")%>
         </td>
         <td>
-            <%= listado.getString("estatura")%>
+            <%= listado.getString("ubicacion")%>
         </td>
         <td>
-            <%= listado.getString("edad")%>
+            <%= listado.getString("fecha")%>
         </td>
         <td>
-            <%= listado.getString("localidad")%>
-        </td>
-        <td>
-            <form method="get" action="borraSocio.jsp">
-                <input type="hidden" name="codigo" value="<%=listado.getString("socioID") %>"/>
+            <form method="get" action="borraEntrenamiento.jsp">
+                <input type="hidden" name="codigo" value="<%=listado.getString("entrenamientoID") %>"/>
                 <input type="submit" value="borrar">
             </form>
         </td>

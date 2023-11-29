@@ -1,6 +1,7 @@
 <%@page import="java.sql.*" %>
 <%@page import="java.util.Objects" %>
 <%@ page import="java.io.IOException" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -13,15 +14,14 @@
     boolean valida = true;
     String tipo = null;
     String ubicacion = null;
-    Date fecha = null;
+    java.util.Date fechaD = null;
 
     boolean flagValidaTipoNull = false;
     boolean flagValidaTipoBlank = false;
     boolean flagValidaTipoCorrect = false;
     boolean flagValidaUbicacionNull = false;
     boolean flagValidaUbicacionBlank = false;
-    boolean flagValidaFechaNull = false;
-    boolean flagValidaFechaBlank = false;
+    boolean flagValidaFecha = false;
     try {
 
         //UTILIZO LOS CONTRACTS DE LA CLASE Objects PARA LA VALIDACIÓN
@@ -37,7 +37,8 @@
         tipo = request.getParameter("tipo");
 
         // VALIDA TIPO CORRECTO:
-
+        if (!request.getParameter("tipo").equalsIgnoreCase("Técnico") || !request.getParameter("tipo").equalsIgnoreCase("Físico")) throw new RuntimeException("El tipo no coincide.");
+        flagValidaTipoCorrect = true;
 
         //UTILIZO LOS CONTRACTS DE LA CLASE Objects PARA LA VALIDACIÓN
         //             v---- LANZA NullPointerException SI EL PARÁMETRO ES NULL
@@ -52,34 +53,21 @@
         ubicacion = request.getParameter("ubicacion");
 
 
-        //UTILIZO LOS CONTRACTS DE LA CLASE Objects PARA LA VALIDACIÓN
-        //             v---- LANZA NullPointerException SI EL PARÁMETRO ES NULL
-        Objects.requireNonNull(request.getParameter("tipo"));
-        flagValidaTipoNull = true;
-        //CONTRACT nonBlank..
-        //UTILIZO isBlank SOBRE EL PARÁMETRO DE TIPO String PARA CHEQUEAR QUE NO ES UN PARÁMETRO VACÍO "" NI CADENA TODO BLANCOS "    "
-        //          |                                EN EL CASO DE QUE SEA BLANCO LO RECIBIDO, LANZO UNA EXCEPCIÓN PARA INVALIDAR EL PROCESO DE VALIDACIÓN
-        //          -------------------------v                      v---------------------------------------|
-        if (request.getParameter("tipo").isBlank()) throw new RuntimeException("Parámetro vacío o todo espacios blancos.");
-        flagValidaTipoBlank = true;
-        tipo = request.getParameter("tipo");
+        // VALIDA FECHA:
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        fechaD = formato.parse(request.getParameter("fecha"));
+        flagValidaFecha = true;
 
 
     } catch (Exception ex) {
         ex.printStackTrace();
 
-        if(!flagValidaNumero){
-            session.setAttribute("error", "Error en número");
-        } else if (!flagValidaNombreNull || !flagValidaNombreBlank) {
-            session.setAttribute("error", "Error en nombre");
-        } else if (!flagValidaEstatura) {
-            session.setAttribute("error", "Error en estatura");
-        } else if (!flagValidaEdad){
-            session.setAttribute("error", "Error en edad");
-        } else if (!flagValidaEdad){
-            session.setAttribute("error", "Error en edad");
-        } else if (!flagValidaLocalidadNull || !flagValidaLocalidadBlank) {
-            session.setAttribute("error", "Error en localidad");
+        if (!flagValidaTipoNull || !flagValidaTipoBlank || !flagValidaTipoCorrect) {
+            session.setAttribute("error", "Error en tipo");
+        } else if (!flagValidaUbicacionBlank || !flagValidaUbicacionNull) {
+            session.setAttribute("error", "Error en ubicación");
+        } else if (!flagValidaFecha){
+            session.setAttribute("error", "Error en fecha");
         }
 
         valida = false;
@@ -90,7 +78,8 @@
 
         Connection conn = null;
         PreparedStatement ps = null;
-// 	ResultSet rs = null;
+        ResultSet rsGenKeys = null;
+        //ResultSet rs = null;
 
         try {
 
@@ -110,24 +99,28 @@
 //       s.execute(insercion);
 //<<<<<<
 
-            String sql = "INSERT INTO socio VALUES ( " +
-                    "?, " + //socioID
-                    "?, " + //nombre
-                    "?, " + //estatura
-                    "?, " + //edad
-                    "?)"; //localidad
+            //String sql = "INSERT INTO entrenamiento VALUES ( " +
+            //        "?, " + //tipo
+            //        "?, " + //ubicacion
+            //        "?)"; //fecha
 
-            ps = conn.prepareStatement(sql);
+
+            //1 alternativas comentadas:
+            //Ver también, AbstractDAOImpl.executeInsert ...
+            //Columna fabricante.codigo es clave primaria auto_increment, por ese motivo se omite de la sentencia SQL INSERT siguiente.
+            ps = conn.prepareStatement("INSERT INTO entrenamiento (tipo, ubicacion, fecha) VALUES (?, ? , ?)", Statement.RETURN_GENERATED_KEYS);
+
+            //ps = conn.prepareStatement(sql);
+
             int idx = 1;
-            ps.setInt(idx++, numero);
-            ps.setString(idx++, nombre);
-            ps.setInt(idx++, estatura);
-            ps.setInt(idx++, edad);
-            ps.setString(idx++, localidad);
+            ps.setString(idx++, tipo);
+            ps.setString(idx++, ubicacion);
+            ps.setDate(idx++, new java.sql.Date(fechaD.getTime()));
 
             int filasAfectadas = ps.executeUpdate();
-            System.out.println("SOCIOS GRABADOS:  " + filasAfectadas);
+            System.out.println("ENTRENAMIENTO GRABADO:  " + filasAfectadas);
 
+            rsGenKeys = ps.getGeneratedKeys();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -143,20 +136,18 @@
             } catch (Exception e) { /* Ignored */ }
         }
 
-        //out.println("Socio dado de alta.");
-
         // en vez de mostrar mensaje voy a redirigir a detalle del socio mandándole el numero de socio
         //response.sendRedirect("detalleSocio.jsp?socioID="+numero);
 
         // otra forma:
-        session.setAttribute("socioADestacar", numero);
-        response.sendRedirect("pideNumeroSocio.jsp"); // El ID del socio lo he metido a la session
+        session.setAttribute("entrenamientoADestacar", rsGenKeys.getInt(1));
+        response.sendRedirect("listadoEntrenamiento.jsp"); // El ID del socio lo he metido a la session
 
     } else {
         //out.println("Error de validación!");
 
         // En vez de mostrar mensaje reenvio a formulario para mostrar el error:
-        response.sendRedirect("formularioSocio.jsp");
+        response.sendRedirect("formularioEntrenamiento.jsp");
     }
 %>
 
