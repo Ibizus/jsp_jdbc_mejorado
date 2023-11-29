@@ -37,7 +37,7 @@
         tipo = request.getParameter("tipo");
 
         // VALIDA TIPO CORRECTO:
-        if (!request.getParameter("tipo").equalsIgnoreCase("Técnico") || !request.getParameter("tipo").equalsIgnoreCase("Físico")) throw new RuntimeException("El tipo no coincide.");
+        if (!(request.getParameter("tipo").equalsIgnoreCase("tecnico") || request.getParameter("tipo").equalsIgnoreCase("fisico"))) throw new RuntimeException("El tipo no coincide.");
         flagValidaTipoCorrect = true;
 
         //UTILIZO LOS CONTRACTS DE LA CLASE Objects PARA LA VALIDACIÓN
@@ -121,6 +121,9 @@
             System.out.println("ENTRENAMIENTO GRABADO:  " + filasAfectadas);
 
             rsGenKeys = ps.getGeneratedKeys();
+            System.out.println(rsGenKeys);
+            System.out.println(rsGenKeys.getInt(1));
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
