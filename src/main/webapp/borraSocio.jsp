@@ -20,7 +20,6 @@
     
     
     if (valida) {
-
       
 	Connection conn = null;
 	PreparedStatement ps = null;

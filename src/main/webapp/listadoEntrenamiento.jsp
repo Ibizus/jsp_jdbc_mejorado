@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="estilos.css" />
 </head>
 <body>
+
 <%
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:30306/baloncesto","root", "user");
@@ -18,7 +19,9 @@
     ResultSet listado = s.executeQuery ("SELECT * FROM entrenamiento");
 %>
 <table>
-    <tr><th>ID Entrenamiento</th><th>Tipo</th><th>Ubicación</th><th>Fecha</th></tr>
+    <tr><th>ID Entrenamiento</th><th>Tipo</th><th>Ubicación</th><th>Fecha</th>
+    <th><a href="menuEntrenamiento.jsp">Menú</a></th>
+    </tr>
     <%
         Integer entrenamientoID = (Integer)session.getAttribute("entrenamientoADestacar");
         String claseDestacar = "";
@@ -42,7 +45,7 @@
         </td>
         <td>
             <form method="get" action="borraEntrenamiento.jsp">
-                <input type="hidden" name="codigo" value="<%=listado.getString("entrenamientoID") %>"/>
+                <input type="hidden" name="identificador" value="<%=listado.getString("entrenamientoID") %>"/>
                 <input type="submit" value="borrar">
             </form>
         </td>

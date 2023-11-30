@@ -11,7 +11,7 @@
     boolean valida = true;
     int codigo = -1;
     try {
-        codigo = Integer.parseInt(request.getParameter("codigo"));
+        codigo = Integer.parseInt(request.getParameter("identificador"));
     } catch (NumberFormatException nfe) {
         nfe.printStackTrace();
         valida = false;
@@ -20,7 +20,6 @@
 
 
     if (valida) {
-
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -33,15 +32,15 @@
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:30306/baloncesto","root", "user");
 
-//>>>>>>NO UTILIZAR STATEMENT EN QUERIES PARAMETRIZADAS
-//      Statement s = conexion.createStatement();
-//      s.execute ("DELETE FROM socio WHERE socioID=" + request.getParameter("codigo"));
-//<<<<<<
+            //>>>>>>NO UTILIZAR STATEMENT EN QUERIES PARAMETRIZADAS
+            //      Statement s = conexion.createStatement();
+            //      s.execute ("DELETE FROM socio WHERE socioID=" + request.getParameter("codigo"));
+            //<<<<<<
 
             //UTILIZAR PreparedStatement SIEMPRE EN QUERIES PARAMETRIZADAS
             //EN ESTE CASO 1 SOLO PARÁMETRO: socioID = ?
             //NÓTESE QUE EL PARÁMETRO SE INTRODUCE CON UN CARÁCTER ?
-            String sql = "DELETE FROM socio WHERE socioID = ?";
+            String sql = "DELETE FROM entrenamiento WHERE entrenamientoID = ?";
             //CREO EL OBJETO PreparedStatement
             ps = conn.prepareStatement(sql);
 
@@ -52,7 +51,7 @@
             //CUANDO EJECUTAS SENTENCIAS DML, INSERT, UPDATE, DELETE SE EMPLEA ps.executeUpdate()
             int filasAfectadas = ps.executeUpdate();
 
-            System.out.println("SOCIOS BORRADOS:  " + filasAfectadas);
+            System.out.println("ENTRENAMIENTOS BORRADOS:  " + filasAfectadas);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -68,6 +67,6 @@
 %>
 
 <!-- REDIRECCIÓN POR JavaScript EN EL CLIENTE  -->
-<script>document.location = "pideNumeroSocio.jsp"</script>
+<script>document.location = "listadoEntrenamiento.jsp"</script>
 </body>
 </html>

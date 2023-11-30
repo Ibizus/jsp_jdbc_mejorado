@@ -18,7 +18,9 @@
       ResultSet listado = s.executeQuery ("SELECT * FROM socio");
     %>
     <table>
-      <tr><th>Código</th><th>Nombre</th><th>Estatura</th><th>Edad</th><th>Localidad</th></tr>
+      <tr><th>Código</th><th>Nombre</th><th>Estatura</th><th>Edad</th><th>Localidad</th>
+          <th><a href="index.jsp">Inicio</a></th>
+      </tr>
     <%
         Integer socioIDADestacar = (Integer)session.getAttribute("socioADestacar");
         String claseDestacar = "";

@@ -9,7 +9,10 @@
 <br/>
 <a href="formularioEntrenamiento.jsp">Crear nuevo entrenamiento</a>
 <br>
-<a href="listadoEntrenamientos.jsp">Listado de Entrenamientos</a>
+<a href="listadoEntrenamiento.jsp">Listado de Entrenamientos</a>
+<br>
+<br>
+<a href="index.jsp">Inicio</a>
 <br>
 </body>
 </html>

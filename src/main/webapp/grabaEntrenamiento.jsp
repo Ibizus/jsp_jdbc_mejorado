@@ -12,6 +12,7 @@
 <%
     //CÓDIGO DE VALIDACIÓN
     boolean valida = true;
+    int idGenerado = -1;
     String tipo = null;
     String ubicacion = null;
     java.util.Date fechaD = null;
@@ -121,9 +122,11 @@
             System.out.println("ENTRENAMIENTO GRABADO:  " + filasAfectadas);
 
             rsGenKeys = ps.getGeneratedKeys();
-            System.out.println(rsGenKeys);
-            System.out.println(rsGenKeys.getInt(1));
-
+            // Imprescindible entrar antes en el ResultSet
+            rsGenKeys.next();
+            // guardo el ID para tenerlo disponible después de cerrar la conexión
+            idGenerado = rsGenKeys.getInt(1);
+            //System.out.println(rsGenKeys.getInt(1));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -142,9 +145,9 @@
         // en vez de mostrar mensaje voy a redirigir a detalle del socio mandándole el numero de socio
         //response.sendRedirect("detalleSocio.jsp?socioID="+numero);
 
-        // otra forma:
-        session.setAttribute("entrenamientoADestacar", rsGenKeys.getInt(1));
-        response.sendRedirect("listadoEntrenamiento.jsp"); // El ID del socio lo he metido a la session
+        // otra forma: AÑADO EL ID GENERADO A LA SESSION EN VEZ DE MANDARLO AL SENDREDIRECT:
+        session.setAttribute("entrenamientoADestacar", idGenerado);
+        response.sendRedirect("listadoEntrenamiento.jsp");
 
     } else {
         //out.println("Error de validación!");
